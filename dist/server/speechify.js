@@ -16,6 +16,7 @@ class MySpeechify {
             this.dataQueue.push(this.fetchReadableContentFromTxt(data.data));
         }
         if (data.type == _common_1.DataType.JSON) {
+            this.dataQueue.push(this.fetchReadableContentFromJson(data.data));
         }
         console.log(this.dataQueue.length);
         return true;
@@ -55,9 +56,13 @@ class MySpeechify {
         readableContent.push(txt);
         return readableContent;
     }
-    fetchReadableContentFromJson(htmldata) {
+    fetchReadableContentFromJson(json) {
         var readableContent = [];
-        readableContent.push(htmldata);
+        const obj = JSON.parse(json);
+        for (var prop in obj) {
+            readableContent.push("Key: " + prop);
+            readableContent.push("Value: " + obj[prop]);
+        }
         return readableContent;
     }
 }

@@ -18,7 +18,7 @@ export default class MySpeechify implements SpeechifyServer {
       this.dataQueue.push(this.fetchReadableContentFromTxt(data.data));
     }
     if (data.type == DataType.JSON) {
-
+      this.dataQueue.push(this.fetchReadableContentFromJson(data.data));
     }
     console.log(this.dataQueue.length);
     return true;
@@ -62,9 +62,13 @@ export default class MySpeechify implements SpeechifyServer {
     return readableContent;
   }
 
-  fetchReadableContentFromJson(htmldata: string): any {
+  fetchReadableContentFromJson(json: string): any {
     var readableContent = [];
-    readableContent.push(htmldata);
+    const obj = JSON.parse(json);
+    for (var prop in obj) {
+      readableContent.push("Key: " + prop);
+      readableContent.push("Value: " + obj[prop]);
+    }
     return readableContent;
   }
 }
