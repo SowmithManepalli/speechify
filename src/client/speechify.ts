@@ -56,9 +56,7 @@ export default class SpeechifyClientImpl implements SpeechifyClient {
   play(): void {
     // Resume an existing paused utterance.
     speechSynthesis.resume();
-    if (this.stateChecker == undefined) {
-      this.stateChecker = setInterval(this.getState.bind(this), 1000);
-    }
+    this.stateChecker = setInterval(this.getState.bind(this), 1000);
     this.clientState = ClientState.PLAYING;
     try {
       // if there is no pending utterance, fetch new data from the queue.
@@ -82,6 +80,7 @@ export default class SpeechifyClientImpl implements SpeechifyClient {
     speechSynthesis.pause();
     this.clientState = ClientState.NOT_PLAYING;
     this.sendStateChangeEvent(this.clientState);
+    clearInterval(this.stateChecker);
   }
 
   getState(): ClientState {
@@ -90,6 +89,7 @@ export default class SpeechifyClientImpl implements SpeechifyClient {
     } else {
       this.clientState = ClientState.NOT_PLAYING;
     }
+    console.log(this.clientState, this.lastKnowState);
     if (this.lastKnowState != this.clientState) {
       this.sendStateChangeEvent(this.clientState);
       if (this.clientState == ClientState.NOT_PLAYING) {
